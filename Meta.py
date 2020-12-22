@@ -1,8 +1,18 @@
-DATASET_ROOT = "/Users/liaoyuanda/Desktop/Deep Learning Collection/TIMIT/"
+
+import Meta_config
+from Meta_config import WIN
+
+if WIN:
+	DATASET_ROOT = "C:\\Users\\Lenovo\\Desktop\\TIMIT\\"
+else:
+	DATASET_ROOT = "/Users/liaoyuanda/Desktop/Deep Learning Collection/TIMIT/"
 TEST_ROOT  = DATASET_ROOT + "TEST";
 TRAIN_ROOT = DATASET_ROOT + "TRAIN";
 
-PROJ_ROOT = "/Users/liaoyuanda/Desktop/LP_cocktail/"
+if WIN:
+	PROJ_ROOT = "C:\\Users\\Lenovo\\Desktop\\LP_cocktail"
+else:
+	PROJ_ROOT = "/Users/liaoyuanda/Desktop/LP_cocktail"
 
 GEND = ['F', 'M'] # genders
 NUM_SPK = 630
