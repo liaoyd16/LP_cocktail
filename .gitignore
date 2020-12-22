@@ -4,4 +4,6 @@ TIMIT_proc/*/*.json
 scripts/resultjsons/*.json
 .DS_Store
 */.DS_Store
+*/*.WAV
+*/*.wav
 
