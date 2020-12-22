@@ -1,6 +1,6 @@
 __pycache__/
 */__pycache__/
-TIMIT_proc/*jsons/
+TIMIT_proc/*jsons/*.json
 scripts/resultjsons/*.json
 .DS_Store
 */.DS_Store
