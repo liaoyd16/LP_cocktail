@@ -4,11 +4,9 @@
 # 2. all phones
 # dumped to "docjsons/"
 
-import Meta
+import __init__
+from __init__ import *
 import json
-import os
-import sys
-sys.path.append("../")
 import utils
 import utils.sentence_access as access
 import itertools
@@ -25,7 +23,10 @@ def do_speaker_info():
             speaker_info_dict[sp_info[1]] = [sp_info[0], test_train, dr]
 
     # (speaker_id: gender, test_train, dr)
-    json.dump(speaker_info_dict, open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc/docjsons/speaker_info.json"), "w"))
+    if Meta_config.WIN:
+        json.dump(speaker_info_dict, open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc\\docjsons\\speaker_info.json"), "w"))
+    else:
+        json.dump(speaker_info_dict, open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc/docjsons/speaker_info.json"), "w"))
 
 
 def input_phones():
@@ -33,12 +34,19 @@ def input_phones():
     # ends with empty line
     print("collecting all (meaningful) phones")
     phones = []
-    for s in open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc/docjsons/phonecode.txt")):
+    if Meta_config.WIN:
+        filename = os.path.join(Meta.PROJ_ROOT, "TIMIT_proc\\docjsons\\phonecode.txt")
+    else:
+        filename = os.path.join(Meta.PROJ_ROOT, "TIMIT_proc/docjsons/phonecode.txt")
+    for s in open(filename):
         items = s.rstrip().split()
         assert(len(items) == 2)
         phones.append([items[0], items[1]])
 
-    json.dump(phones, open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc/docjsons/phones.json"), "w"))
+    if Meta_config.WIN:
+        json.dump(phones, open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc\\docjsons\\phones.json"), "w"))
+    else:
+        json.dump(phones, open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc/docjsons/phones.json"), "w"))
 
 
 if __name__ == '__main__':

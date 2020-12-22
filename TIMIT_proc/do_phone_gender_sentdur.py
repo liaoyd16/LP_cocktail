@@ -1,10 +1,8 @@
 # 4. table: phoneme x gender |=> (sentence, duration_bound)
 # dumped to "tablejsons/"
 
-import os
-import sys
-sys.path.append("../")
-import Meta
+import __init__
+from __init__ import *
 import json
 import random
 
@@ -50,11 +48,18 @@ def lookup(speaker_info, gender_sp, phone_sentdur, sp_sent, gender, sym, num):
 def do_phone_gender_sentdur():
     print("do phone_gender_sent_dur table")
 
-    speaker_info = json.load(open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc/docjsons/speaker_info.json")))
-    phones_info = json.load(open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc/docjsons/phones.json")))
-    gender_sp = json.load(open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc/tablejsons/gender_sp_table.json")))
-    phone_sentdur = json.load(open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc/tablejsons/phone_sentdur.json")))
-    sp_sent = json.load(open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc/tablejsons/sp_sent_table.json")))
+    if Meta_config.WIN:
+        speaker_info = json.load(open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc\\docjsons\\speaker_info.json")))
+        phones_info = json.load(open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc\\docjsons\\phones.json")))
+        gender_sp = json.load(open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc\\tablejsons\\gender_sp_table.json")))
+        phone_sentdur = json.load(open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc\\tablejsons\\phone_sentdur.json")))
+        sp_sent = json.load(open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc\\tablejsons\\sp_sent_table.json")))
+    else:
+        speaker_info = json.load(open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc/docjsons/speaker_info.json")))
+        phones_info = json.load(open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc/docjsons/phones.json")))
+        gender_sp = json.load(open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc/tablejsons/gender_sp_table.json")))
+        phone_sentdur = json.load(open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc/tablejsons/phone_sentdur.json")))
+        sp_sent = json.load(open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc/tablejsons/sp_sent_table.json")))
 
     table = dict()
     for type_sym in phones_info:
@@ -63,7 +68,10 @@ def do_phone_gender_sentdur():
             sent_durs = lookup(speaker_info, gender_sp, phone_sentdur, sp_sent, gender=Meta.GEND[igender], sym=sym, num=5)
             add(table, sym, igender, sent_durs)
 
-    json.dump(table, open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc/tablejsons/phone_gender_sentdur.json"), "w"))
+    if Meta_config.WIN:
+        json.dump(table, open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc\\tablejsons\\phone_gender_sentdur.json"), "w"))
+    else:
+        json.dump(table, open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc/tablejsons/phone_gender_sentdur.json"), "w"))
 
 
 if __name__ == '__main__':

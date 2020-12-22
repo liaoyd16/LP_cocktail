@@ -1,10 +1,8 @@
 # 5. table: (phoneme, gender) x (phoneme, gender) |=> (s1,d1,s2,d2)
 # dumped to "tablejsons/"
 
-import os
-import sys
-sys.path.append("../")
-import Meta
+import __init__
+from __init__ import *
 import utils.sentence_access as access
 import json
 import itertools
@@ -23,8 +21,12 @@ def add(table, phone_1, phone_2, igen1, igen2, sd1_sd2_list):
 
 
 def do_phone_gender_pair():
-    phones_info = json.load(open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc/docjsons/phones.json")))
-    phone_gender_sentdur = json.load(open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc/tablejsons/phone_gender_sentdur.json")))
+    if Meta_config.WIN:
+        phones_info = json.load(open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc\\docjsons\\phones.json")))
+        phone_gender_sentdur = json.load(open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc\\tablejsons\\phone_gender_sentdur.json")))
+    else:
+        phones_info = json.load(open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc/docjsons/phones.json")))
+        phone_gender_sentdur = json.load(open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc/tablejsons/phone_gender_sentdur.json")))
 
     table = dict()
 
@@ -39,7 +41,10 @@ def do_phone_gender_pair():
                 sd1_sd2_list.append([*gen1_sent_dur_n[i], *gen2_sent_dur_n[::-1][i]]) # reverse order for list #2
             add(table, sym1, sym2, igen1, igen2, sd1_sd2_list)
 
-    json.dump(table, open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc/tablejsons/phone_gender_pair.json"), "w"))
+    if Meta_config.WIN:
+        json.dump(table, open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc\\tablejsons\\phone_gender_pair.json"), "w"))
+    else:
+        json.dump(table, open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc/tablejsons/phone_gender_pair.json"), "w"))
 
 
 if __name__ == '__main__':

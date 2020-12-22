@@ -1,10 +1,8 @@
 # 3. table: phoneme x sentence id |=> duration_bound
 # dumped to "tablejsons/"
 
-import os
-import sys
-sys.path.append("../")
-import Meta
+import __init__
+from __init__ import *
 import utils.sentence_access as access
 import json
 import config
@@ -19,7 +17,10 @@ def add(table, sym, sent_id, dur):
 
 def do_phone_sentdur():
     print("do phone_sent_dur table")
-    speaker_info = json.load(open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc/docjsons/speaker_info.json")))
+    if Meta_config.WIN:
+        speaker_info = json.load(open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc\\docjsons\\speaker_info.json")))
+    else:
+        speaker_info = json.load(open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc/docjsons/speaker_info.json")))
 
     table = dict()
     for speaker_id in speaker_info: # (speaker_id => gender, test_train, dr)
@@ -38,7 +39,10 @@ def do_phone_sentdur():
                     dur = [dur_sym[0], dur_sym[1]]
                     add(table, sym, sent_id, dur)
 
-    json.dump(table, open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc/tablejsons/phone_sentdur.json"), "w"))
+    if Meta_config.WIN:
+        json.dump(table, open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc\\tablejsons\\phone_sentdur.json"), "w"))
+    else:
+        json.dump(table, open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc/tablejsons/phone_sentdur.json"), "w"))
     
 
 if __name__ == '__main__':

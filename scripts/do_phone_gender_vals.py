@@ -1,15 +1,13 @@
 # 6. (phoneme, gender) x (phoneme, gender) |=> (distort, mute)
 
-import os
-import sys
-sys.path.append("../model")
-sys.path.append("../utils")
 
-import Meta
-import model.do_model
+import __init__
+from __init__ import *
+sys.path.append("../model")
+from model import do_model
+sys.path.append("../utils")
 import sentence_access as access
 import metrics
-
 import json
 import numpy as np
 import itertools
