@@ -73,7 +73,7 @@ def do_phone_gender_vals():
 
                 add(table, sym_1, sym_2, igen1, igen2, [x_convert, distort, mute])
 
-    eng.quit_matlab()
+    quit_matlab(eng)
     json.dump(table, open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc/resultjsons/results.json"), "w"))
 
 
