@@ -21,7 +21,7 @@ class ArrayTree:
 
 
     def _check_legal(self, l, k):
-        assert(l < len(self.layers) and 0 <= k and k < base**l)
+        assert(l < len(self.layers) and 0 <= k and k < self.base**l)
 
 
     def get(self, l, k):
@@ -33,18 +33,18 @@ class ArrayTree:
         self.layers[l][k] = x
 
     def get_parent_pos(self, l, k):
-        return (l-1, int(k//base))
+        return (l-1, int(k//self.base))
 
     def get_child_pos(self, lk, nth): # l starts from 0, k starts from 0
         l, k = lk
-        return (l+1, base*k+nth)
+        return (l+1, self.base*k+nth)
 
 
     def add_child(self, lk, nth, x): # (l,k) is the parent, l starts from 0, k starts from 0
         l, k = lk
         assert(l < len(self.layers))
         if len(self.layers) == l+1:
-            self.layers.append([None for _ in range(base**(l+1))])
+            self.layers.append([None for _ in range(self.base**(l+1))])
         l_child, k_child = self.get_child_pos( (l,k), nth )
         self.layers[l_child][k_child] = x
 
