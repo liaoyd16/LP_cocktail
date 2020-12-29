@@ -19,6 +19,9 @@ def _check_1d_ndarray(x):
 def _to_dim_1(x):
     return x.reshape(-1,1).tolist()
 
+def _to_matlab(arr):
+    return matlab.double(_to_dim_1(arr))
+
 """ private components """
 def _do_combine2(eng, xs, nfft):
     if len(xs) != 2: raise NotImplementedError()
@@ -27,16 +30,15 @@ def _do_combine2(eng, xs, nfft):
     _check_1d_ndarray(xlow)
     _check_1d_ndarray(xhigh)
 
-    x_rec = eng.compose2(matlab.double(_to_dim_1(xlow)), \
-                         matlab.double(_to_dim_1(xhigh)), nfft, nargout=1)
+    x_rec = eng.compose2(_to_matlab(xlow), \
+                         _to_matlab(xhigh), nfft, nargout=1)
     return x_rec
 
 def _do_decomp2(eng, x, nfft):
     _check_1d_ndarray(x)
 
-    x = matlab.double(_to_dim_1(x))
-    xs = eng.decompose2(x, int(nfft), nargout=2)
-    xs = [np.array(x).reshape(-1) for x in xs]
+    xs = eng.decompose2(_to_matlab(x), int(nfft), nargout=2)
+    xs = [np.array(xi).reshape(-1) for xi in xs]
     assert(len(xs[0]) == len(xs[1]))
     return xs
 
@@ -47,8 +49,10 @@ def _do_levdur_array(eng, x):
     _check_1d_ndarray(x)
 
     err, arcoeff, _, _, _ = levinson_durbin(x)
+    a_identify = np.concatenate([[1], -arcoeff]) # [1, az^-1, a^z-2, ...]
+    a_identify = eng.spec_decomp(_to_matlab(a_identify))
     err_list.append(err)
-    return arcoeff
+    return a_identify
 
 def _convert(eng, x, a_tgt, a_src=None):
     """
@@ -63,8 +67,8 @@ def _convert(eng, x, a_tgt, a_src=None):
         _check_1d_ndarray(a_src)
         x = np.convolve(x, np.concatenate([[1], -a_src])) # do whitening: a_src
 
-    k = eng.tf2latc(1., matlab.double(_to_dim_1(a_tgt)), nargout=1)              # do IIR: a_tgt
-    f, _ = eng.latcfilt(k, matlab.double(_to_dim_1(x)), nargout=2)
+    k = eng.tf2latc(1., _to_matlab(a_tgt), nargout=1)              # do IIR: a_tgt
+    f, _ = eng.latcfilt(k, _to_matlab(x), nargout=2)
     f = np.array(f).reshape(-1)
     _check_1d_ndarray(f)
     assert(len(f) == len(x))
