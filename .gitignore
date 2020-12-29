@@ -7,3 +7,4 @@ scripts/resultjsons/*.json
 */*.WAV
 */*.wav
 tests/
+debug/
