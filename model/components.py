@@ -63,12 +63,17 @@ def _convert(eng, x, a_tgt, a_src=None):
     """
     _check_1d_ndarray(x)
     _check_1d_ndarray(a_tgt)
-    if not a_src == None:
+    if not a_src is None:
         _check_1d_ndarray(a_src)
-        x = np.convolve(x, np.concatenate([[1], -a_src])) # do whitening: a_src
+        x = np.convolve(x, a_src) # do whitening: a_src
 
-    k = eng.tf2latc(1., _to_matlab(a_tgt), nargout=1)              # do IIR: a_tgt
-    f, _ = eng.latcfilt(k, _to_matlab(x), nargout=2)
+    # a) using lattice
+    k = eng.tf2latc(1., _to_matlab(np.concatenate([[1], -a_tgt[1:]])), nargout=1)  # do IIR: a_tgt
+    f, _ = eng.latcfilt(k, 1., _to_matlab(x), nargout=2)
+    # b) using filter
+    # f = eng.filter(1., matlab.double(_to_dim_1(a_tgt)), \
+    #               matlab.double(_to_dim_1(x)), nargout=1)
+
     f = np.array(f).reshape(-1)
     _check_1d_ndarray(f)
     assert(len(f) == len(x))
@@ -87,12 +92,13 @@ def _do_filter_at(eng, l, k, xtree, atree_tgt, atree_src):
     """
     x = xtree.get(l, k)
     a_tgt = atree_tgt.get(l, k)
-    if atree_src == None: filtered = _convert( eng, x, a_tgt )
+    if atree_src is None: filtered = _convert( eng, x, a_tgt )
     else:
         a_src = atree_src.get(l, k)
         filtered = _convert( eng, x, a_tgt, a_src )
     _check_1d_ndarray(filtered)
     return filtered
+
 
 """ public components """
 def do_decomp_tree(x, L, base, nfft, eng):
@@ -143,7 +149,7 @@ def do_comb_tree(xtree, nfft, atree_tgt, atree_src, eng):
     Lx = xtree.num_layers
     La_t = atree_tgt.num_layers
     assert(Lx==La_t)
-    if not atree_src == None:
+    if not atree_src is None:
         La_s = atree_src.num_layers
         assert(Lx==La_s)
     L = Lx
@@ -151,7 +157,7 @@ def do_comb_tree(xtree, nfft, atree_tgt, atree_src, eng):
     base_x = xtree.get_base
     base_a_t = atree_tgt.get_base
     assert(base_a_t == base_x)
-    if not atree_src == None:
+    if not atree_src is None:
         base_a_s = atree_src.get_base
         assert(base_a_s == base_x)
     base = base_x

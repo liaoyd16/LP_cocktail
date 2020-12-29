@@ -20,7 +20,7 @@ def start_matlab():
     return eng
 
 def quit_matlab(eng):
-    eng.quit(nargout=0)
+    eng.quit()
 
 
 def add(table, phone_1, phone_2, igen1, igen2, x_distort_mute):
@@ -39,7 +39,7 @@ def do_phone_gender_vals():
     print("scanning all sym-gender pairs")
     # src: 2, tgt: 1
     eng = start_matlab()
-    for phone_1, phone_2 in itertools.product(phones_info, phones_info):
+    for phone_1, phone_2 in itertools.product(phones_info[32:34], phones_info[32:34]):
         print("\tphone1 = {}, phone2 = {}".format(phone_1, phone_2))
         sym_1 = phone_1[1]
         sym_2 = phone_2[1]
@@ -71,10 +71,13 @@ def do_phone_gender_vals():
                 distort = -1# metrics.distortion(x_convert, sent_tgt, sent_src)
                 mute = metrics.mute(x_convert, sent_src)
 
-                add(table, sym_1, sym_2, igen1, igen2, [x_convert, distort, mute])
+                add(table, sym_1, sym_2, igen1, igen2, [sent_tgt.tolist(), x_convert.tolist(), sent_src.tolist(), distort, mute])
 
     quit_matlab(eng)
-    json.dump(table, open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc/resultjsons/results.json"), "w"))
+    if Meta_config.WIN:
+        json.dump(table, open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc\\resultjsons\\results.json"), "w"))
+    else:
+        json.dump(table, open(os.path.join(Meta.PROJ_ROOT, "TIMIT_proc/resultjsons/results.json"), "w"))
 
 
 if __name__ == '__main__':

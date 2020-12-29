@@ -6,4 +6,5 @@ scripts/resultjsons/*.json
 */.DS_Store
 */*.WAV
 */*.wav
-
+tests/
+debug/

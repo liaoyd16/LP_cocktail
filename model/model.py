@@ -22,10 +22,10 @@ def do_model(eng, x_tgt, x_src, nfft):
 
     print("\t\t\t lev-dur: {}".format( str(datetime.datetime.now()) ))
     atree_tgt = do_levdur(xtree_tgt, 512, eng=eng)
-    # atree_src = do_levdur(xtree_src, 512, eng=eng)
+    atree_src = do_levdur(xtree_src, 512, eng=eng)
 
     print("\t\t\t comb: {}".format( str(datetime.datetime.now()) ))
-    new_xtree = do_comb_tree(xtree_src, nfft, atree_tgt=atree_tgt, atree_src=None, eng=eng) # try: atree_src = None
+    new_xtree = do_comb_tree(xtree_src, nfft, atree_tgt=atree_tgt, atree_src=atree_src, eng=eng) # try: atree_src = None
     x_ans = new_xtree.get(0, 0)
 
     return x_ans
